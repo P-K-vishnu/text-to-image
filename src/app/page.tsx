@@ -1,3 +1,4 @@
+'use client';
 import Homepage from './pages/homePage';
 
 export default function Home() {
