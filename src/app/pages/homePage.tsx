@@ -30,7 +30,7 @@ export default function Home() {
 
     const data = {
       prompt: userInput,
-      // aspect_ratio: '1:1',
+      aspect_ratio: '16:9',
     };
 
     let config = {
@@ -70,7 +70,12 @@ export default function Home() {
       const blob = new Blob([Buffer.from(response.data)], {
         type: 'image/png',
       }); // Adjust content type as needed
+
+      const base64String = Buffer.from(response.data).toString('base64');
+      const dataURI = `data:image/png;base64,${base64String}`;
+      setGenImage(dataURI);
       const url = URL.createObjectURL(blob);
+
       const link = document.createElement('a');
       link.href = url;
       link.download = 'my-image.png'; // Customize the filename
@@ -142,7 +147,7 @@ export default function Home() {
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
             <Image
-              src={genImage ? genImage : '/logo.png'}
+              src="/logo.png"
               alt="Vercel Logo"
               className="dark:invert h-auto w-auto"
               width={50}
@@ -240,7 +245,7 @@ export default function Home() {
             <div className=" flex-1 h-4/5  min-w-80 flex justify-center items-center">
               <div className=" h-4/5 w-4/5  bg-slate-600 backdrop-filter backdrop-blur-md  bg-opacity-20 rounded-lg flex flex-wrap overflow-hidden">
                 <Image
-                  src="/window1.jpg"
+                  src={genImage ? genImage : '/window1.jpg'}
                   alt="Vercel Logo"
                   style={{
                     objectFit: 'contain',
