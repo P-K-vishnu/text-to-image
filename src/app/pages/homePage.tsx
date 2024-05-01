@@ -268,7 +268,7 @@ export default function Home() {
               height={50}
               priority
             />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+            <span className=" hidden md:block self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               LINE.AI
             </span>
           </a>
@@ -345,10 +345,10 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className=" relative flex flex-col place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px] ">
+      <div className=" relative flex flex-col place-items-center before:absolute before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 md:before:w-[480px] md:after:w-[240px] before:lg:h-[360px] ">
         {curPage === 2 ? (
           <>
-            <div className={`flex flex-row gap-4 flex-wrap justify-center `}>
+            <div className={`flex flex-row gap-4 flex-wrap justify-center  `}>
               {card.map((item, i) =>
                 item.Image !== null && item.Prompt !== '' ? (
                   <ImageCard key={i} image={item.Image} prompt={item.Prompt} />
@@ -367,7 +367,7 @@ export default function Home() {
                   height: '70vh',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  width: '100vh',
+                  width: '100vw',
                 }}>
                 <div className=" flex-1 h-4/5  min-w-80 flex justify-center items-center">
                   <div className=" h-4/5 w-4/5  bg-slate-600 backdrop-filter backdrop-blur-md  bg-opacity-20 rounded-lg flex flex-wrap overflow-hidden">
@@ -388,7 +388,7 @@ export default function Home() {
                 </div>
                 <a
                   onClick={downImg}
-                  className=" h-14 w-14 bg-slate-100 rounded-lg absolute bg-opacity-60 flex items-center justify-center right-5">
+                  className=" h-14 w-14 bg-slate-100 rounded-lg absolute bg-opacity-60 flex items-center justify-center lg:right-5">
                   <Image
                     src="/Download.svg"
                     width={45}
@@ -406,7 +406,7 @@ export default function Home() {
                   height: '70vh',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  width: '100vh',
+                  width: '100vw',
                 }}>
                 <div className="flex items-center z-10 space-x-3 rtl:space-x-reverse">
                   <Image
@@ -418,10 +418,10 @@ export default function Home() {
                     priority
                   />
                 </div>
-                <span className="self-center text-5xl font-semibold whitespace-nowrap dark:text-white">
+                <span className=" w-10/12 self-center text-lg md:text-3xl lg:text-5xl  font-semibold whitespace-nowrap text-wrap text-center dark:text-white">
                   Text to image with AI Art Generator
                 </span>
-                <span className="self-center text-lg whitespace-nowrap text-wrap text-center mt-5 dark:text-slate-500">
+                <span className=" w-8/12 self-center text-xs md:text-sm lg:text-lg whitespace-nowrap text-wrap text-center mt-5 dark:text-slate-500">
                   Create awe-inspiring masterpieces effortlessly and explore the
                   endless possibilities of AI generated art. Enter a prompt,
                   choose a style, and watch ImagineArt - AI art generator bring
@@ -430,7 +430,7 @@ export default function Home() {
               </div>
             )}
             <form
-              className=" relative w-full z-10"
+              className=" relative w-4/5 z-10"
               onSubmit={event => handleSubmit(event)}>
               <label
                 htmlFor="search"
@@ -452,7 +452,7 @@ export default function Home() {
                   id="search"
                   value={userInput}
                   onChange={event => setUserInput(event.target.value)}
-                  className="block w-full p-4 ps-10 pe-28run  text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block w-full pr-28 p-4 ps-10 pe-28run  text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Enter your prompts"
                 />
                 <button
