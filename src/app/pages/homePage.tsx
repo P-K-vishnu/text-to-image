@@ -14,6 +14,7 @@ export default function Home() {
   const [genImage, setGenImage] = useState<any>(null);
   const [imgBuffer, SetImgBuffer] = useState<any>(null);
   const [loader, SetLoader] = useState(false);
+  const [showMenu, setShowmenu] = useState(false);
   const [card, SetCard] = useState([{Image: genImage, Prompt: userInput}]);
   const [curPage, setCurPage] = useState(1);
   // let link; // = document.createElement('a');
@@ -57,7 +58,7 @@ export default function Home() {
         validateStatus: undefined,
         responseType: 'arraybuffer',
         headers: {
-          Authorization: `Bearer sk-tbknNLCKPIkhwy0j41QREse3BUhRcMMKcj8RF8V8Aqcches2`,
+          Authorization: `Bearer sk-VYqAJH6AzNpdH5o4FCsY0YPqVSUNouUnmqFbilZ9VOps8DHS`,
           Accept: 'image/*',
         },
       },
@@ -197,7 +198,7 @@ export default function Home() {
           <div
             style={{position: 'absolute'}}
             className="absolute top-2 left-2 bg-white bg-opacity-50 h-7 w-7 flex items-center justify-center rounded-md">
-            <button style={{zIndex: 20}} onClick={() => {}}>
+            <button style={{zIndex: 18}} onClick={() => {}}>
               <Image
                 src="/Download.svg"
                 width={25}
@@ -208,7 +209,7 @@ export default function Home() {
             </button>
           </div>
           <div className="absolute top-14 left-2 bg-white bg-opacity-50 h-7 w-7 flex items-center justify-center rounded-md">
-            <button style={{zIndex: 20}} onClick={() => {}}>
+            <button style={{zIndex: 18}} onClick={() => {}}>
               <Image
                 src="/copyDoc.svg"
                 width={22}
@@ -236,22 +237,35 @@ export default function Home() {
     );
   }
 
+  function Loader() {
+    return (
+      <div
+        className={` z-20 absolute w-28 h-28 bg-slate-400 rounded-lg top-2/4 left-2/4 -translate-y-1/2 -translate-x-2/4 bg-opacity-85 flex justify-center items-center`}>
+        <div
+          className={` w-16 h-16 rounded-full border-4 border-t-neutral-700 border-e-neutral-800 border-b-slate-900 border-s-neutral-600 animate-spin`}></div>
+      </div>
+    );
+  }
+
   useEffect(() => {
     SetCard([...card, {Image: genImage, Prompt: userInput}]);
     // console.log(card);
     // console.log('local', localStorage);
   }, [genImage]);
 
-  // useEffect(() => {
-  //   localStorage.setItem('card', JSON.stringify(card));
-  // }, [card]);
+  useEffect(() => {
+    const cardFilter = card.filter(item => item !== null);
+    if (cardFilter.length === 0) {
+      localStorage.setItem('card', JSON.stringify(cardFilter));
+    }
+  }, [card]);
 
-  // useEffect(() => {
-  //   const items = JSON.parse(localStorage.getItem('card'));
-  //   if (items) {
-  //     SetCard(items);
-  //   }
-  // }, []);
+  useEffect(() => {
+    const items = JSON.parse(localStorage.getItem('card') ?? '[]');
+    if (items) {
+      SetCard(items);
+    }
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -284,6 +298,9 @@ export default function Home() {
               SIGNIN
             </button>
             <button
+              onClick={() => {
+                setShowmenu(!showMenu);
+              }}
               data-collapse-toggle="navbar-sticky"
               type="button"
               className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
@@ -307,12 +324,17 @@ export default function Home() {
             </button>
           </div>
           <div
-            className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+            className={`items-center justify-between ${
+              showMenu ? '' : 'hidden'
+            } w-full md:flex md:w-auto md:order-1`}
             id="navbar-sticky">
             <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
               <li>
                 <a
-                  onClick={() => setCurPage(1)}
+                  onClick={() => {
+                    setCurPage(1);
+                    setShowmenu(false);
+                  }}
                   className={`block py-2 px-3 ${
                     curPage === 1 ? 'text-blue-600' : 'text-white'
                   } rounded`}
@@ -322,7 +344,10 @@ export default function Home() {
               </li>
               <li>
                 <a
-                  onClick={() => setCurPage(2)}
+                  onClick={() => {
+                    setCurPage(2);
+                    setShowmenu(false);
+                  }}
                   className={`block py-2 px-3 ${
                     curPage === 2 ? 'text-blue-600' : 'text-white'
                   } rounded`}
@@ -332,7 +357,10 @@ export default function Home() {
               </li>
               <li>
                 <a
-                  onClick={() => setCurPage(3)}
+                  onClick={() => {
+                    setCurPage(3);
+                    setShowmenu(false);
+                  }}
                   className={`block py-2 px-3 ${
                     curPage === 3 ? 'text-blue-600' : 'text-white'
                   } rounded`}
@@ -358,11 +386,13 @@ export default function Home() {
               )}
             </div>
           </>
+        ) : curPage === 3 ? (
+          <></>
         ) : (
           <>
             {userInput !== '' && genImage !== null ? (
               <div
-                className=" flex  flex-wrap"
+                className=" flex-wrap"
                 style={{
                   height: '70vh',
                   alignItems: 'center',
@@ -370,7 +400,7 @@ export default function Home() {
                   width: '100vw',
                 }}>
                 <div className=" flex-1 h-4/5  min-w-80 flex justify-center items-center">
-                  <div className=" h-4/5 w-4/5  bg-slate-600 backdrop-filter backdrop-blur-md  bg-opacity-20 rounded-lg flex flex-wrap overflow-hidden">
+                  <div className=" h-4/5 w-4/5 backdrop-filter backdrop-blur-md  bg-opacity-20 rounded-lg flex flex-wrap overflow-hidden">
                     <Image
                       src={genImage ? genImage : '/window1.jpg'}
                       alt="Vercel Logo"
@@ -380,23 +410,24 @@ export default function Home() {
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}
-                      width={200}
-                      height={200}
+                      fill
+                      // width={200}
+                      // height={200}
                       priority
                     />
                   </div>
+                  <a
+                    onClick={downImg}
+                    className=" h-14 w-14 bg-slate-100 rounded-lg absolute bg-opacity-60 flex mr-0 items-center justify-center ">
+                    <Image
+                      src="/Download.svg"
+                      width={45}
+                      height={45}
+                      priority
+                      alt={'download'}
+                    />
+                  </a>
                 </div>
-                <a
-                  onClick={downImg}
-                  className=" h-14 w-14 bg-slate-100 rounded-lg absolute bg-opacity-60 flex items-center justify-center lg:right-5">
-                  <Image
-                    src="/Download.svg"
-                    width={45}
-                    height={45}
-                    priority
-                    alt={'download'}
-                  />
-                </a>
               </div>
             ) : (
               <div
@@ -465,6 +496,8 @@ export default function Home() {
           </>
         )}
       </div>
+
+      {loader && <Loader />}
     </main>
   );
 }
