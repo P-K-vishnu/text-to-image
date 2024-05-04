@@ -5,7 +5,7 @@ import fs from 'fs';
 
 import axios from 'axios';
 
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 
 import FormData from 'form-data';
 
@@ -15,7 +15,7 @@ export default function Home() {
   const [imgBuffer, SetImgBuffer] = useState<any>(null);
   const [loader, SetLoader] = useState(false);
   const [showMenu, setShowmenu] = useState(false);
-  const [card, SetCard] = useState([{Image: genImage, Prompt: userInput}]);
+  const [card, SetCard] = useState([]);
   const [curPage, setCurPage] = useState(1);
   // let link; // = document.createElement('a');
 
@@ -23,6 +23,8 @@ export default function Home() {
     event.preventDefault(); // Prevent default form submission
 
     console.log('generating');
+
+    SetLoader(true);
 
     const textData = userInput; // Access the current state value
 
@@ -45,7 +47,7 @@ export default function Home() {
         'Content-Type': 'application/json',
         Accept: 'image/*',
         Authorization:
-          'Bearer sk-tbknNLCKPIkhwy0j41QREse3BUhRcMMKcj8RF8V8Aqcches2',
+          'Bearer sk-yazLA8hX42T5XVK5qIhT9kGhb2yFbJ0h6Ozr8jYyH86HhgA3',
       },
 
       data: data,
@@ -58,13 +60,14 @@ export default function Home() {
         validateStatus: undefined,
         responseType: 'arraybuffer',
         headers: {
-          Authorization: `Bearer sk-VYqAJH6AzNpdH5o4FCsY0YPqVSUNouUnmqFbilZ9VOps8DHS`,
+          Authorization: `Bearer sk-yazLA8hX42T5XVK5qIhT9kGhb2yFbJ0h6Ozr8jYyH86HhgA3`,
           Accept: 'image/*',
         },
-      },
+      }
     );
 
     if (response.status === 200) {
+      SetLoader(false);
       // console.log('saving');
 
       // fs.writeFileSync('./image.jpg', Buffer.from(response.data));
@@ -88,65 +91,9 @@ export default function Home() {
       // link.click();
       // URL.revokeObjectURL(url);
     } else {
+      SetLoader(false);
       throw new Error(`${response.status}: ${response.data.toString()}`);
     }
-
-    // const handleDownload = () => {
-    //   link.download = 'my-image.png';
-    // };
-
-    // axios
-    //   .request(config)
-    //   .then((response) => {
-    //     // console.log(JSON.stringify(response.data));
-    //     // console.log('data', response.data[0].asset_url);
-
-    //     // setGenImage(response.data[0].asset_url);
-
-    //     if (response.status === 200) {
-    //       console.log('image');
-
-    //       fs.writeFileSync('./image.webp', Buffer.from(response.data));
-    //     } else {
-    //       throw new Error(`${response.status}: ${response.data.toString()}`);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
-    // console.log('promopt :', textData);
-
-    // const resp = await fetch(`https://api.limewire.com/api/image/generation`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'X-Api-Version': 'v1',
-    //     Accept: 'application/json',
-    //     Authorization:
-    //       'Bearer lmwr_sk_gY0gDsjWzM_PSBfjJX8B8WPZn2dtb3HsibBRt3p63cMzNezc',
-    //   },
-    //   mode: 'no-cors',
-    //   body: JSON.stringify({
-    //     prompt: textData,
-    //     aspect_ratio: '1:1',
-    //   }),
-    // });
-
-    // console.log(resp);
-
-    // const data = await resp.json();
-
-    // if (resp.status === 401) {
-    //   console.log('unauth');
-    //   return;
-    // }
-
-    // const response = await callYourAPI(textData);
-
-    // Handle the API response (optional)
-
-    // console.log(userInput); // prompt
   };
 
   const downImg = () => {
@@ -174,7 +121,8 @@ export default function Home() {
           maxWidth: '350px',
           borderRadius: '8px',
           overflow: 'hidden',
-        }}>
+        }}
+      >
         <div
           style={{
             position: 'relative',
@@ -182,7 +130,8 @@ export default function Home() {
             width: '100%',
             height: '250px',
             overflow: 'hidden',
-          }}>
+          }}
+        >
           <Image
             src={props.image ? props.image : '/window1.jpg'}
             alt="Vercel Logo"
@@ -196,9 +145,10 @@ export default function Home() {
             priority
           />
           <div
-            style={{position: 'absolute'}}
-            className="absolute top-2 left-2 bg-white bg-opacity-50 h-7 w-7 flex items-center justify-center rounded-md">
-            <button style={{zIndex: 18}} onClick={() => {}}>
+            style={{ position: 'absolute' }}
+            className="absolute top-2 left-2 bg-white bg-opacity-50 h-7 w-7 flex items-center justify-center rounded-md"
+          >
+            <button style={{ zIndex: 18 }} onClick={() => {}}>
               <Image
                 src="/Download.svg"
                 width={25}
@@ -209,7 +159,7 @@ export default function Home() {
             </button>
           </div>
           <div className="absolute top-14 left-2 bg-white bg-opacity-50 h-7 w-7 flex items-center justify-center rounded-md">
-            <button style={{zIndex: 18}} onClick={() => {}}>
+            <button style={{ zIndex: 18 }} onClick={() => {}}>
               <Image
                 src="/copyDoc.svg"
                 width={22}
@@ -230,7 +180,8 @@ export default function Home() {
             height: '80px',
             display: 'flex',
             alignItems: 'center',
-          }}>
+          }}
+        >
           <h3 className="text-ellipsis line-clamp-3">{props.prompt}</h3>
         </div>
       </div>
@@ -240,30 +191,45 @@ export default function Home() {
   function Loader() {
     return (
       <div
-        className={` z-20 absolute w-28 h-28 bg-slate-400 rounded-lg top-2/4 left-2/4 -translate-y-1/2 -translate-x-2/4 bg-opacity-85 flex justify-center items-center`}>
+        className={` z-20 absolute w-28 h-28 bg-slate-400 rounded-lg top-2/4 left-2/4 -translate-y-1/2 -translate-x-2/4 bg-opacity-85 flex justify-center items-center`}
+      >
         <div
-          className={` w-16 h-16 rounded-full border-4 border-t-neutral-700 border-e-neutral-800 border-b-slate-900 border-s-neutral-600 animate-spin`}></div>
+          className={` w-16 h-16 rounded-full border-4 border-t-neutral-700 border-e-neutral-800 border-b-slate-900 border-s-neutral-600 animate-spin`}
+        ></div>
       </div>
     );
   }
 
   useEffect(() => {
-    SetCard([...card, {Image: genImage, Prompt: userInput}]);
+    if (genImage) SetCard([...card, { Image: genImage, Prompt: userInput }]);
     // console.log(card);
     // console.log('local', localStorage);
   }, [genImage]);
 
   useEffect(() => {
-    const cardFilter = card.filter(item => item !== null);
-    if (cardFilter.length === 0) {
+    const cardFilter = card.filter((item) => item !== null);
+    console.log(cardFilter, 'cardFilter');
+
+    if (cardFilter.length !== 0) {
       localStorage.setItem('card', JSON.stringify(cardFilter));
     }
   }, [card]);
 
   useEffect(() => {
     const items = JSON.parse(localStorage.getItem('card') ?? '[]');
-    if (items) {
-      SetCard(items);
+    // console.log(items, 'items');
+
+    if (items.length !== 0) {
+      items.forEach((item: any) => {
+        if (item.Image !== null && item.Image !== undefined) {
+          console.log(item.Image, 'item.image');
+          console.log('setting image');
+
+          SetCard(items);
+        } else {
+          console.log(`Item has a null image`);
+        }
+      });
     }
   }, []);
 
@@ -273,7 +239,8 @@ export default function Home() {
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a
             href="#"
-            className="flex items-center space-x-3 rtl:space-x-reverse">
+            className="flex items-center space-x-3 rtl:space-x-reverse"
+          >
             <Image
               src="/logo.png"
               alt="Vercel Logo"
@@ -289,12 +256,14 @@ export default function Home() {
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             <button
               type="button"
-              className="text-white focus:outline-none font-medium rounded-lg text-sm px-4 py-2 text-center ">
+              className="text-white focus:outline-none font-medium rounded-lg text-sm px-4 py-2 text-center "
+            >
               SIGNUP
             </button>
             <button
               type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
               SIGNIN
             </button>
             <button
@@ -305,14 +274,16 @@ export default function Home() {
               type="button"
               className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
               aria-controls="navbar-sticky"
-              aria-expanded="false">
+              aria-expanded="false"
+            >
               <span className="sr-only">Open main menu</span>
               <svg
                 className="w-5 h-5"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 17 14">
+                viewBox="0 0 17 14"
+              >
                 <path
                   stroke="currentColor"
                   strokeLinecap="round"
@@ -327,7 +298,8 @@ export default function Home() {
             className={`items-center justify-between ${
               showMenu ? '' : 'hidden'
             } w-full md:flex md:w-auto md:order-1`}
-            id="navbar-sticky">
+            id="navbar-sticky"
+          >
             <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
               <li>
                 <a
@@ -338,7 +310,8 @@ export default function Home() {
                   className={`block py-2 px-3 ${
                     curPage === 1 ? 'text-blue-600' : 'text-white'
                   } rounded`}
-                  aria-current="page">
+                  aria-current="page"
+                >
                   Home
                 </a>
               </li>
@@ -351,7 +324,8 @@ export default function Home() {
                   className={`block py-2 px-3 ${
                     curPage === 2 ? 'text-blue-600' : 'text-white'
                   } rounded`}
-                  aria-current="page">
+                  aria-current="page"
+                >
                   Gallary
                 </a>
               </li>
@@ -364,7 +338,8 @@ export default function Home() {
                   className={`block py-2 px-3 ${
                     curPage === 3 ? 'text-blue-600' : 'text-white'
                   } rounded`}
-                  aria-current="page">
+                  aria-current="page"
+                >
                   Tools
                 </button>
               </li>
@@ -382,7 +357,7 @@ export default function Home() {
                   <ImageCard key={i} image={item.Image} prompt={item.Prompt} />
                 ) : (
                   <></>
-                ),
+                )
               )}
             </div>
           </>
@@ -397,7 +372,8 @@ export default function Home() {
                 <div className="z-10 md:z-0">
                   <label
                     className="text-white dark:text-gray-200"
-                    for="passwordConfirmation">
+                    for="passwordConfirmation"
+                  >
                     Style preset
                   </label>
                   <select className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring">
@@ -411,7 +387,8 @@ export default function Home() {
                 <div className="z-10 md:z-0">
                   <label
                     className="text-white dark:text-gray-200"
-                    for="passwordConfirmation">
+                    for="passwordConfirmation"
+                  >
                     Aspet ratio
                   </label>
                   <select className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring">
@@ -429,7 +406,8 @@ export default function Home() {
                 <div className="z-10 md:z-0">
                   <label
                     className="text-white dark:text-gray-200"
-                    for="passwordConfirmation">
+                    for="passwordConfirmation"
+                  >
                     Seed
                   </label>
                   <input
@@ -441,13 +419,15 @@ export default function Home() {
                 <div>
                   <label
                     className="text-white dark:text-gray-200"
-                    for="passwordConfirmation">
+                    for="passwordConfirmation"
+                  >
                     Nagative Prompt
                   </label>
                   <textarea
                     id="textarea"
                     type="textarea"
-                    className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"></textarea>
+                    className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  ></textarea>
                 </div>
                 <div>
                   <label className="text-white dark:text-gray-200">Image</label>
@@ -458,7 +438,8 @@ export default function Home() {
                         stroke="currentColor"
                         fill="none"
                         viewBox="0 0 48 48"
-                        aria-hidden="true">
+                        aria-hidden="true"
+                      >
                         <path
                           d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
                           stroke-width="2"
@@ -469,7 +450,8 @@ export default function Home() {
                       <div className="flex text-sm text-gray-600">
                         <label
                           for="file-upload"
-                          className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                          className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                        >
                           <span className=" px-2">Upload a file</span>
                           <input
                             id="file-upload"
@@ -505,7 +487,8 @@ export default function Home() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   width: '100vw',
-                }}>
+                }}
+              >
                 <div className=" flex-1 h-4/5  min-w-80 flex justify-center items-center">
                   <div className=" h-4/5 w-4/5 backdrop-filter backdrop-blur-md  bg-opacity-20 rounded-lg flex flex-wrap overflow-hidden">
                     <Image
@@ -525,7 +508,8 @@ export default function Home() {
                   </div>
                   <a
                     onClick={downImg}
-                    className=" h-14 w-14 bg-slate-100 rounded-lg absolute bg-opacity-60 flex mr-0 items-center justify-center ">
+                    className=" h-14 w-14 bg-slate-100 rounded-lg absolute bg-opacity-60 flex mr-0 items-center justify-center "
+                  >
                     <Image
                       src="/Download.svg"
                       width={45}
@@ -545,7 +529,8 @@ export default function Home() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   width: '100vw',
-                }}>
+                }}
+              >
                 <div className="flex items-center z-10 space-x-3 rtl:space-x-reverse">
                   <Image
                     src="/logo.png"
@@ -569,10 +554,12 @@ export default function Home() {
             )}
             <form
               className=" relative w-4/5 z-10"
-              onSubmit={event => handleSubmit(event)}>
+              onSubmit={(event) => handleSubmit(event)}
+            >
               <label
                 htmlFor="search"
-                className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+                className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+              >
                 Enter your prompt
               </label>
               <div className="relative">
@@ -589,13 +576,14 @@ export default function Home() {
                   type="search"
                   id="search"
                   value={userInput}
-                  onChange={event => setUserInput(event.target.value)}
+                  onChange={(event) => setUserInput(event.target.value)}
                   className="block w-full pr-28 p-4 ps-10 pe-28run  text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Enter your prompts"
                 />
                 <button
                   type="submit"
-                  className=" text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  className=" text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
                   Generate
                 </button>
               </div>
